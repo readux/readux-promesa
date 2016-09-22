@@ -9,17 +9,28 @@
        (apply str)
        keyword))
 
+(defn- promesa-action
+  [action]
+  (cond
+    (p/promise? (:payload action))
+    {:promise (:payload action) :data nil}
+
+    (p/promise? (when (map? (:payload action))
+                  (get-in action [:payload :promise])))
+    (select-keys (:payload action) [:promise :data])))
+
 (defn mw-promesa
-  [dispatch next model action data]
-  (let [[p & rest] data
-        rsp (if rest {:data rest} {})]
-    (if (p/promise? p)
-      (do (let [on-success (keyword-append action ".success")
-                on-error (keyword-append action ".error")]
-            (dispatch (keyword-append action ".rq") rsp)
-            (-> p
-                (p/then #(dispatch on-success (assoc rsp :payload %)))
-                (p/catch #(dispatch on-error (assoc rsp :payload nil
-                                                        :error %)))))
-          model)
-      (next model action data))))
+  [dispatch next model action]
+  (when-let [{:keys [promise data]} (promesa-action action)]
+    (do (let [on-success (keyword-append action ".success")
+              on-error (keyword-append action ".error")
+              rq (keyword-append action ".rq")]
+          (dispatch {:type rq :payload data})
+          (-> promise
+              (p/then #(dispatch
+                        {:type on-success :payload {:rsp  %
+                                                    :data data}}))
+              (p/catch #(dispatch
+                         {:type on-error :payload {:rsp  %
+                                                   :data data} :error true}))))
+        model)))
