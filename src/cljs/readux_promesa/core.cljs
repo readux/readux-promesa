@@ -21,10 +21,12 @@
 
 (defn mw-promesa
   [dispatch next model action]
-  (when-let [{:keys [promise data]} (promesa-action action)]
-    (do (let [on-success (keyword-append action ".success")
-              on-error (keyword-append action ".error")
-              rq (keyword-append action ".rq")]
+  (println "mw-promesa invoked")
+  (if-let [{:keys [promise data]} (promesa-action action)]
+    (do (let [action-type (:type action)
+              on-success (keyword-append action-type ".success")
+              on-error (keyword-append action-type ".error")
+              rq (keyword-append action-type ".rq")]
           (dispatch {:type rq :payload data})
           (-> promise
               (p/then #(dispatch
@@ -33,4 +35,5 @@
               (p/catch #(dispatch
                          {:type on-error :payload {:rsp  %
                                                    :data data} :error true}))))
-        model)))
+        model)
+    (next model action)))
