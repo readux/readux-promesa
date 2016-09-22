@@ -14,9 +14,9 @@
   (let [[p & rest] data
         rsp (if rest {:data rest} {})]
     (if (p/promise? p)
-      (do (let [on-success (keyword-append action "-success")
-                on-error (keyword-append action "-error")]
-            (dispatch (keyword-append action "-rq") rsp)
+      (do (let [on-success (keyword-append action ".success")
+                on-error (keyword-append action ".error")]
+            (dispatch (keyword-append action ".rq") rsp)
             (-> p
                 (p/then #(dispatch on-success (assoc rsp :payload %)))
                 (p/catch #(dispatch on-error (assoc rsp :payload nil
