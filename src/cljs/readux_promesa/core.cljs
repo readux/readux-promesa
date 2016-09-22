@@ -3,11 +3,14 @@
 
 (defn- keyword-append
   "Construct a keyword by appending an arbitrary sequence of strings/keywords"
-  [& args]
-  (->> args
-       (map name)
-       (apply str)
-       keyword))
+  [kw & args]
+  (let [ns (if (keyword? kw) (namespace kw) nil)
+        append-kw #(conj % kw)]
+    (->> args
+         append-kw
+         (map name)
+         (apply str)
+         (keyword ns))))
 
 (defn- promesa-action
   [action]
