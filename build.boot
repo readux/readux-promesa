@@ -10,8 +10,10 @@
                  [com.cemerick/piggieback "0.2.1" :scope "test"]
                  [weasel "0.7.0" :scope "test"]
                  [org.clojure/tools.nrepl "0.2.12" :scope "test"]]
+
+  :checkouts '[[readux "0.1.4-SNAPSHOT"]]
   :project 'readux-promesa
-  :version "0.1.0-SNAPSHOT")
+  :version "0.1.1-SNAPSHOT")
 
 (require '[adzerk.boot-cljs :refer [cljs]]
          '[pandeiro.boot-http :refer [serve]]
@@ -51,7 +53,9 @@
     use this in conjunction with 'checkout -d <dir>' on a dependent project"
     []
     (println "watching for changes & rebuilding local jar as needed.")
-    (println "use -d <path-to-this-project> to rebuild dependent projects in response")
+    (println "Add: ")
+    (println (str "    :checkouts '[[" (get-env :project) " \"" (get-env :version) "\"]]"))
+    (println "To any dependent projects.")
     (comp (watch)
           (local)))
 
