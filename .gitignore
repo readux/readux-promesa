@@ -2,6 +2,7 @@ target/**/*
 out/**/*
 .nrepl*
 project.clj
+*.iml
 
 examples/*/target/**/*
 examples/*/out/**/*
