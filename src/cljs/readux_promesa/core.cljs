@@ -21,7 +21,6 @@
 
 (defn mw-promesa
   [dispatch next model action]
-  (println "mw-promesa invoked")
   (if-let [{:keys [promise data]} (promesa-action action)]
     (do (let [action-type (:type action)
               on-success (keyword-append action-type ".success")
