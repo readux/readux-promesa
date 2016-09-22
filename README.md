@@ -6,13 +6,13 @@ of [promesa](https://github.com/funcool/promesa)-based promises.
 ```
 #(rdc/dispatch 
   store
-  :FETCH_POSTS 
+  :fetch-posts
   [(p/promise (fn [done err](err 20))) "something" "else"])
 
-;; Dispatches :FETCH_POSTS_PENDING
+;; Dispatches :fetch-posts-rq
 ;;   data: {:data ("something" "else")}
 ;; ... when promise is resolved
-;; Dispatches :FETCH_POSTS_ERROR
+;; Dispatches :fetch-posts-error
 ;;   data:  {:data ("something" "else")
 ;;           :payload nil
 ;;           :error 20}
@@ -21,13 +21,13 @@ of [promesa](https://github.com/funcool/promesa)-based promises.
 ```
 #(rdc/dispatch 
   store
-  :FETCH_POSTS 
+  :fetch-posts
   [(p/promise (fn [done err](done 10))) "something"])
 
-;; Dispatches :FETCH_POSTS_PENDING
+;; Dispatches :fetch-posts-rq
 ;;   data: {:data ("something" "else")}
 ;; ... when promise is resolved
-;; Dispatches :FETCH_POSTS_SUCCESS
+;; Dispatches :fetch-posts-success
 ;;   data:  {:data ("something")
 ;;           :payload 10}
 ```
