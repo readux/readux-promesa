@@ -13,7 +13,7 @@
 
   :checkouts '[[readux "0.1.4-SNAPSHOT"]]
   :project 'readux-promesa
-  :version "0.1.3-SNAPSHOT")
+  :version "0.1.4-SNAPSHOT")
 
 (require '[adzerk.boot-cljs :refer [cljs]]
          '[pandeiro.boot-http :refer [serve]]
