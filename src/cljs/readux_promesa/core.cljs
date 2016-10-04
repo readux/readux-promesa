@@ -28,14 +28,18 @@
     (do (let [action-type (:type action)
               on-success (keyword-append action-type ".success")
               on-error (keyword-append action-type ".error")
-              rq (keyword-append action-type ".rq")]
+              rq (keyword-append action-type ".rq")
+              with-meta (fn [a] (merge a (select-keys action [:meta])))]
           (dispatch {:type rq :payload data})
           (-> promise
               (p/then #(dispatch
-                        {:type on-success :payload {:rsp  %
-                                                    :data data}}))
+                        {:type on-success
+                         :payload (with-meta {:rsp %
+                                              :data data})}))
               (p/catch #(dispatch
-                         {:type on-error :payload {:rsp  %
-                                                   :data data} :error true}))))
+                         {:type on-error
+                          :payload (with-meta {:rsp %
+                                               :data data})
+                          :error true}))))
         model)
     (next model action)))
