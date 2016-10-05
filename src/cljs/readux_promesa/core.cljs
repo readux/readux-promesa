@@ -33,13 +33,13 @@
           (dispatch {:type rq :payload data})
           (-> promise
               (p/then #(dispatch
-                        {:type on-success
-                         :payload (with-meta {:rsp %
-                                              :data data})}))
+                        (with-meta
+                          {:type on-success
+                           :payload {:rsp % :data data}})))
               (p/catch #(dispatch
-                         {:type on-error
-                          :payload (with-meta {:rsp %
-                                               :data data})
-                          :error true}))))
+                         (with-meta
+                           {:type on-error
+                            :payload {:rsp % :data data}
+                            :error true})))))
         model)
     (next model action)))
